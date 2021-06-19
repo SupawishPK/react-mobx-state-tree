@@ -1,22 +1,36 @@
 import React from "react";
 import "./App.css";
+import { setupRootStore } from "./mst/setup";
+import {Provider} from 'mobx-react'
 
 interface Props {}
 
-interface State {}
+interface State {
+  rootTree: any
+}
 
 class App extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
 
-    this.state = {};
+    this.state = {
+      rootTree: null
+    };
+  }
+  componentDidMount = () => {
+    const {rootTree} = setupRootStore()
+    this.setState({rootTree})
   }
 
   render() {
+    const { rootTree } = this.state
+    if(!this.state.rootTree) return null
     return (
+      <Provider rootTree={rootTree}>
       <div>
         <p>Hi</p>
       </div>
+      </Provider>
     );
   }
 }
