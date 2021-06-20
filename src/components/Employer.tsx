@@ -10,6 +10,7 @@ interface EmployerComponentProps {
 interface EmployerComponentState {
   employeeName: string;
   hours_worked: string;
+  searchString: string;
 }
 
 @inject("rootTree")
@@ -23,6 +24,7 @@ class EmployerComponent extends React.Component<
     this.state = {
       employeeName: "",
       hours_worked: "",
+      searchString: "",
     };
   }
   changeEmployeeName = (e: any) => {
@@ -33,18 +35,25 @@ class EmployerComponent extends React.Component<
     const hours_worked = e.target.value;
     this.setState({ hours_worked });
   };
+  searchStringChange = (e: any) => {
+    const searchString = e.target.value;
+    this.setState({ searchString });
+  };
   onSubmit = (e: any) => {
     e.preventDefault();
     const { employeeName, hours_worked } = this.state;
     const { rootTree } = this.props;
     if (!rootTree) return null;
     rootTree.employer.newEmployee(employeeName, parseInt(hours_worked));
+    this.setState({ employeeName: "", hours_worked: "" });
   };
   render() {
     const { rootTree } = this.props;
-    const { employeeName, hours_worked } = this.state;
+    const { employeeName, hours_worked, searchString } = this.state;
     if (!rootTree) return null;
-    const num_employees = rootTree.employer.num_employees
+    const num_employees = rootTree.employer.num_employees;
+    const filtered_employees =
+      rootTree.employer.filtered_employees(searchString);
     return (
       <div>
         <h1>{rootTree.employer.name}</h1>
@@ -61,7 +70,12 @@ class EmployerComponent extends React.Component<
           <button>Submit</button>
         </form>
         <hr />
-        {rootTree.employer.employees.map((employee) => (
+        <input
+          placeholder="search employee name"
+          value={searchString}
+          onChange={this.searchStringChange}
+        />
+        {filtered_employees.map((employee) => (
           <EmployeeComponent employee={employee} key={employee.id} />
         ))}
       </div>

@@ -14,7 +14,7 @@ class EmployeeComponent extends React.Component<
   EmployeeComponentState
 > {
   render() {
-    const { hours_worked, name } = this.props.employee
+    const { hours_worked, name } = this.props.employee;
     return (
       <div>
         <p>{`Name : ${name}`}</p>
